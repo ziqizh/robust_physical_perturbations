@@ -1,12 +1,14 @@
 #!/bin/bash
 export SIGN_PREFIX="octagon"
 export SIGN_SETPOINT=0.37
-export SIGN_MASK="octagon.png"
+export SIGN_MASK="18.png"
 export SIGN_TARGET=12
 
 mkdir optimization_output/${SIGN_PREFIX}
 mkdir optimization_output/${SIGN_PREFIX}/noisy_images
 mkdir optimization_output/${SIGN_PREFIX}/model
+mkdir optimization_output/${SIGN_PREFIX}/noisy-set
+
 
 python gennoise_many_images.py  \
     --tf_seed 12345 \

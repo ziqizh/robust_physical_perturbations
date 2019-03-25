@@ -23,7 +23,7 @@ import math
 FLAGS = flags.FLAGS
 
 def main(argv=None):
-    print "going into setup"
+    print("going into setup")
     op, model, sess, pholders, varops = setup_attack_graph()
 
     data = load_many_images(FLAGS.attack_srcdir)
@@ -48,8 +48,8 @@ def main(argv=None):
     else:
         clean_model_loss = model_loss(pholders['attack_target'], model(pholders['image_in']), mean=True) 
     
-    for i in xrange(FLAGS.attack_epochs):
-        print 'Epoch %d'%i,
+    for i in range(FLAGS.attack_epochs):
+        print('Epoch %d'%i),
         sys.stdout.flush()
         
         if not FLAGS.fullres_input:
@@ -72,35 +72,39 @@ def main(argv=None):
                 varops['resized_noise_in']) \
                 , feed_dict=feed_dict)
 
-        print "adversarial loss %.5f model loss on clean img: %.5f"%(train_loss, clean_loss),
+        print("adversarial loss %.5f model loss on clean img: %.5f"%(train_loss, clean_loss)),
         sys.stdout.flush()
        
         if FLAGS.printability_optimization:
-            print "noise NPS %.5f"%sess.run(varops['printer_error'], feed_dict=feed_dict),
+            print("noise NPS %.5f"%sess.run(varops['printer_error'], feed_dict=feed_dict)),
 
-        num_misclassified = 0
+        # num_misclassified = 0
 
-        for j in xrange(num_images):
-            clean_classification = np.argmax(clean_classes[j])
-            noise_classification = np.argmax(noisy_classes[j])
-            if clean_classification != noise_classification:
-                num_misclassified += 1
+        # for j in range(num_images):
+        #     clean_classification = np.argmax(clean_classes[j])
+        #     noise_classification = np.argmax(noisy_classes[j])
+        #     if clean_classification != noise_classification:
+        #         num_misclassified += 1
 
-        proportion_misclassified = float(num_misclassified)/float(num_images)
-        print 'percent misclassified images %.1f'%(proportion_misclassified*100.0)
-
-        if i%FLAGS.save_frequency == 0 or proportion_misclassified > 0.9: 
-            saver.save(sess, os.path.join('optimization_output', FLAGS.checkpoint, 'model', FLAGS.checkpoint), global_step=i)
-            imsave(os.path.join('optimization_output', FLAGS.checkpoint, "noisy_images", "noisyimg_%s_epoch_%d.png"%(FLAGS.checkpoint,i)), (noisy_in[0]*255).astype(int))
-
-            if FLAGS.fullres_input:
-                imsave(os.path.join('optimization_output', FLAGS.checkpoint, "nimage_downsized_%d.png"%i), rnin[0])
-                imsave(os.path.join('optimization_output', FLAGS.checkpoint, "noise_downsized_%d.png"%i),sess.run(varops['noise']))
+        # proportion_misclassified = float(num_misclassified)/float(num_images)
+        # print('percent misclassified images %.1f'%(proportion_misclassified*100.0))
 
 
-        print 
+        # if i%FLAGS.save_frequency == 0 or proportion_misclassified > 0.9: 
+        #     saver.save(sess, os.path.join('optimization_output', FLAGS.checkpoint, 'model', FLAGS.checkpoint), global_step=i)
+        #     imsave(os.path.join('optimization_output', FLAGS.checkpoint, "noisy_images", "noisyimg_%s_epoch_%d.png"%(FLAGS.checkpoint,i)), (noisy_in[0]*255).astype(int))
+
+        #     if FLAGS.fullres_input:
+        #         imsave(os.path.join('optimization_output', FLAGS.checkpoint, "nimage_downsized_%d.png"%i), rnin[0])
+        #         imsave(os.path.join('optimization_output', FLAGS.checkpoint, "noise_downsized_%d.png"%i),sess.run(varops['noise']))
+
+
+        print()
        ### end of epoch
     sess.close()
+
+    for i in range(num_images):
+        imsave(os.path.join('optimization_output', FLAGS.checkpoint, "noisy-set", "%d.png"%(i)), (noisy_in[i]*255).astype(int))
 
 if __name__ == '__main__':
     app.run()

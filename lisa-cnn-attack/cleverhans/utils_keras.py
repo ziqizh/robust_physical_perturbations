@@ -32,7 +32,7 @@ def conv_2d(filters, kernel_shape, strides, padding, input_shape=None):
     :return: the Keras layer
     """
     if LooseVersion(keras.__version__) >= LooseVersion('2.0.0'):
-        print "Using Keras version", keras.__version__
+        print("Using Keras version", keras.__version__)
         if input_shape is not None:
             return Conv2D(filters=filters, kernel_size=kernel_shape,
                           strides=strides, padding=padding,
@@ -41,7 +41,7 @@ def conv_2d(filters, kernel_shape, strides, padding, input_shape=None):
             return Conv2D(filters=filters, kernel_size=kernel_shape,
                           strides=strides, padding=padding)
     else:
-        print "Using *old* keras version", keras.__version__
+        print("Using *old* keras version", keras.__version__)
         if input_shape is not None:
             return Convolution2D(filters, kernel_shape[0], kernel_shape[1],
                                  subsample=strides, border_mode=padding,
