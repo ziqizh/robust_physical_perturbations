@@ -72,6 +72,8 @@ def main(argv=None):
                 varops['resized_noise_in']) \
                 , feed_dict=feed_dict)
 
+        print(model(tf.image.resize_images(pholders['image_in'], (FLAGS.img_rows,FLAGS.img_cols))))
+
         print("adversarial loss %.5f model loss on clean img: %.5f"%(train_loss, clean_loss)),
         sys.stdout.flush()
        
